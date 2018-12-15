@@ -12,25 +12,32 @@ var config = {
 firebase.initializeApp(config);
 var database = firebase.database();
 
-$("form button").on("click", function(event){
+$("form button").on("click", function (event) {
     event.preventDefault();
     console.log("choooooo-chooooooooo");
-    getVal = function(x){
-        return $("#"+x+"Input").val().trim();
+    // function grabs values from inputs
+    getVal = function (x) {
+        return $("#" + x + "Input").val().trim();
     }
-    // input data assigned to variables
-    let newName = getVal("name");
-    let newDest = getVal("dest");
-    let newArrival = getVal("arrival");
-    let newFreq = getVal("freq");
     // add data to firebase
     database.ref().push({
-        Train_Name: newName,
-        Destination: newDest,
-        First_Arrival: newArrival,
-        Frequency: newFreq,
+        Train_Name: getVal("name"),
+        Destination: getVal("dest"),
+        First_Arrival: getVal("arrival"),
+        Frequency: getVal("freq"),
     });
-    console.log(newName, newDest, newArrival, newFreq);
     // clears form inputs
     $("form").trigger("reset");
+});
+
+database.ref().on("child_added", function (childSnap) {
+    console.log(childSnap.val()["Train_Name"]);
+    let tRow = $("<tr>");
+    let newName = $("<td scope='col'>").text(childSnap.val()["Train_Name"]);
+    let newDest = $("<td scope='col'>").text(childSnap.val()["Destination"]);
+    // let newArrival = $("<td scope='col'>").text(childSnap.val()["First_Arrival"]);
+    // let newFreq = $("<td scope='col'>").text(childSnap.val()["Frequency"]);
+    $(tRow).append(newName, newDest);
+    $("tbody").append(tRow);
+
 });
