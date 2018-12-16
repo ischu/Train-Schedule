@@ -44,7 +44,15 @@ nextArrival = function (firstTrain, frequency) {
 
 
 minutesAway = function (firstTrain, frequency) {
-    nextArvl = nextArrival(firstTrain, frequency);
+    // turn nextArrival result into moment()
+    nextArvl = moment(nextArrival(firstTrain, frequency), "HH:mm");
+    // find difference
+    difference = nextArvl.diff(currentTime, "minutes");
+    console.log(
+        moment(nextArvl).format("HH:mm")," - "+moment(currentTime).format("HH:mm")," = "+difference+" minutes and some amount of seconds");
+    // .diff cuts off the seconds, so it is best to add another minute back on
+    result = difference + 1;
+    return result;
 };
 minutesAway("1200", "30");
 // events
@@ -73,7 +81,8 @@ database.ref().on("child_added", function (childSnap) {
     let newDest = $("<td scope='col'>").text(childSnap.val()["Destination"]);
     let newFreq = $("<td scope='col'>").text(childSnap.val()["Frequency"]);
     let newNext = $("<td scope='col'>").text(nextArrival(childSnap.val()["First_Arrival"], childSnap.val()["Frequency"]));
-    $(tRow).append(newName, newDest, newFreq, newNext);
+    let newAway = $("<td scope='col'>").text(minutesAway(childSnap.val()["First_Arrival"], childSnap.val()["Frequency"]));
+    $(tRow).append(newName, newDest, newFreq, newNext, newAway);
     $("tbody").append(tRow);
 
 });
