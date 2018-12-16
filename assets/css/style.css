@@ -1,9 +1,24 @@
 body{
-    background-image: url(../images/what-the-hex-dark.png)
+    background-image: url(../images/what-the-hex-dark.png);
+    font-family: 'Roboto', Courier, monospace;
+}
+tbody{
+    font-family: 'Staatliches', sans-serif;
+}
+.td-3, 
+.td-4, 
+.td-5{
+    text-indent: 1em;
 }
 .jumbotron{
-    margin-top: .25rem;
-    color: beige;
+    height: fit-content;
+    padding: 2rem 0;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+    border: 1px solid beige;
 }
 .jumbotron h5{
     font-style: italic;
@@ -11,6 +26,7 @@ body{
 .card{
     margin-bottom: .5rem;
     background: beige;
+    border: none;
 }
 .card-header{
     color: white;

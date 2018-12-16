@@ -81,8 +81,10 @@ database.ref().on("child_added", function (childSnap) {
     let freq = train.Frequency;
     let first = train.First_Arrival;
     let tRow = $("<tr>");
+    let i = 0;
     newD = function (value) {
-        return $("<td scope='col'>").text(value);
+        i++;
+        return $(`<td scope='col' class=td-${i}>`).text(value);
     };
     $(tRow).append(
         newD(name), newD(dest), newD(freq), newD(nextArrival(first, freq)), newD(minutesAway(first, freq)));
