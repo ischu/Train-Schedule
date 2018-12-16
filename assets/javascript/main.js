@@ -1,5 +1,6 @@
 // $(document).ready(function () {
 // });
+
 // Initialize Firebase
 var config = {
     apiKey: "AIzaSyAsR908qTP52Ik_-OlkiDu_xxWFJOQiEFs",
@@ -10,8 +11,31 @@ var config = {
     messagingSenderId: "597322626556"
 };
 firebase.initializeApp(config);
-var database = firebase.database();
 
+// global variables
+var database = firebase.database();
+var currentTime = moment();
+// functions
+nextArrival = function(firstArrival, frequency){
+    console.log("current time is: "+moment().format('HH:mm'));
+    // converted first arrival time moment(firstArrival, 'Hmm').format('HH:mm')
+    let nextArvl = moment(firstArrival, 'hmm').format('HHmm');
+    // converted frequency moment(frequency, 'mm').format('mm')
+    let freqMin = parseInt(moment(frequency, 'mm').format('HHmm'));
+    // current time, converted
+    let t = parseInt(currentTime.format('HHmm'));
+    console.log(nextArvl, freqMin, t);
+    // iterate first arrival by frequency until greater than current time
+    do{
+        nextArvl = moment(nextArvl, "hmm").add(freqMin, 'm').format('HHmm');
+        result = parseInt(nextArvl);
+    }while(result<t);
+    console.log(nextArvl);
+    return moment(nextArvl, "HHmm").format('HH:mm');
+};
+nextArrival("1200", "30");
+
+// events
 $("form button").on("click", function (event) {
     event.preventDefault();
     console.log("choooooo-chooooooooo");
@@ -35,9 +59,10 @@ database.ref().on("child_added", function (childSnap) {
     let tRow = $("<tr>");
     let newName = $("<td scope='col'>").text(childSnap.val()["Train_Name"]);
     let newDest = $("<td scope='col'>").text(childSnap.val()["Destination"]);
-    // let newArrival = $("<td scope='col'>").text(childSnap.val()["First_Arrival"]);
-    // let newFreq = $("<td scope='col'>").text(childSnap.val()["Frequency"]);
-    $(tRow).append(newName, newDest);
+    let newFreq = $("<td scope='col'>").text(childSnap.val()["Frequency"]);
+    let newNext = $("<td scope='col'>").text(nextArrival(childSnap.val()["First_Arrival"], childSnap.val()["Frequency"]));
+    $(tRow).append(newName, newDest, newFreq, newNext);
     $("tbody").append(tRow);
 
 });
+console.log(moment().startOf('month').fromNow());
