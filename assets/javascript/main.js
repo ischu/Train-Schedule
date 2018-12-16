@@ -11,30 +11,42 @@ var config = {
     messagingSenderId: "597322626556"
 };
 firebase.initializeApp(config);
+// log current time
+console.log("current time is: " + moment().format("YYYY-MM-DD HH:mm"));
 
 // global variables
 var database = firebase.database();
 var currentTime = moment();
 // functions
-nextArrival = function(firstArrival, frequency){
-    console.log("current time is: "+moment().format('HH:mm'));
-    // converted first arrival time moment(firstArrival, 'Hmm').format('HH:mm')
-    let nextArvl = moment(firstArrival, 'hmm').format('HHmm');
-    // converted frequency moment(frequency, 'mm').format('mm')
-    let freqMin = parseInt(moment(frequency, 'mm').format('HHmm'));
-    // current time, converted
-    let t = parseInt(currentTime.format('HHmm'));
-    console.log(nextArvl, freqMin, t);
-    // iterate first arrival by frequency until greater than current time
-    do{
-        nextArvl = moment(nextArvl, "hmm").add(freqMin, 'm').format('HHmm');
-        result = parseInt(nextArvl);
-    }while(result<t);
-    console.log(nextArvl);
-    return moment(nextArvl, "HHmm").format('HH:mm');
-};
-nextArrival("1200", "30");
 
+// NOTE: this function assumes the "first train time" is not today
+nextArrival = function (firstTrain, frequency) {
+    // first train time converted
+    oneTime = moment(firstTrain, "Hmm");
+    // first train time set as variable to be manipulated
+    otherTime = moment(oneTime);
+    // adds frequency to first train time in minutes until it is after current time
+    if (otherTime.isAfter(currentTime)) {
+        otherTime.subtract(1, "day");
+        while (otherTime.isBefore(currentTime)) {
+            otherTime.add(parseInt(frequency), "minutes");
+            // console.log(otherTime.format("HH:mm"));
+        };
+        return otherTime.format("HH:mm");
+    } else {
+        while (otherTime.isBefore(currentTime)) {
+            otherTime.add(parseInt(frequency), "minutes");
+            // console.log(otherTime.format("HH:mm"));
+        };
+        return otherTime.format("HH:mm");
+    }
+};
+
+
+minutesAway = function (firstTrain, frequency) {
+    nextArvl = nextArrival(firstTrain, frequency);
+};
+minutesAway("1200", "30");
 // events
 $("form button").on("click", function (event) {
     event.preventDefault();
@@ -65,4 +77,3 @@ database.ref().on("child_added", function (childSnap) {
     $("tbody").append(tRow);
 
 });
-console.log(moment().startOf('month').fromNow());
