@@ -48,8 +48,7 @@ minutesAway = function (firstTrain, frequency) {
     nextArvl = moment(nextArrival(firstTrain, frequency), "HH:mm");
     // find difference
     difference = nextArvl.diff(currentTime, "minutes");
-    console.log(
-        moment(nextArvl).format("HH:mm")," - "+moment(currentTime).format("HH:mm")," = "+difference+" minutes and some amount of seconds");
+    // console.log(moment(nextArvl).format("HH:mm"), " - " + moment(currentTime).format("HH:mm"), " = " + difference + " minutes and some amount of seconds");
     // .diff cuts off the seconds, so it is best to add another minute back on
     result = difference + 1;
     return result;
@@ -74,15 +73,18 @@ $("form button").on("click", function (event) {
     $("form").trigger("reset");
 });
 
+// creates table
 database.ref().on("child_added", function (childSnap) {
-    console.log(childSnap.val()["Train_Name"]);
+    let train = childSnap.val();
+    let name = train.Train_Name;
+    let dest = train.Destination;
+    let freq = train.Frequency;
+    let first = train.First_Arrival;
     let tRow = $("<tr>");
-    let newName = $("<td scope='col'>").text(childSnap.val()["Train_Name"]);
-    let newDest = $("<td scope='col'>").text(childSnap.val()["Destination"]);
-    let newFreq = $("<td scope='col'>").text(childSnap.val()["Frequency"]);
-    let newNext = $("<td scope='col'>").text(nextArrival(childSnap.val()["First_Arrival"], childSnap.val()["Frequency"]));
-    let newAway = $("<td scope='col'>").text(minutesAway(childSnap.val()["First_Arrival"], childSnap.val()["Frequency"]));
-    $(tRow).append(newName, newDest, newFreq, newNext, newAway);
+    newD = function (value) {
+        return $("<td scope='col'>").text(value);
+    };
+    $(tRow).append(
+        newD(name), newD(dest), newD(freq), newD(nextArrival(first, freq)), newD(minutesAway(first, freq)));
     $("tbody").append(tRow);
-
 });

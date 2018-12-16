@@ -1,3 +1,17 @@
 body{
-    background-color: #fffff3;
+    background-image: url(../images/what-the-hex-dark.png)
+}
+.jumbotron{
+    margin-top: .25rem;
+    color: beige;
+}
+.jumbotron h5{
+    font-style: italic;
+}
+.card{
+    margin-bottom: .5rem;
+    background: beige;
+}
+.card-header{
+    color: white;
 }
