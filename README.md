@@ -1,4 +1,6 @@
 # Train-Schedule
 Train schedule with real-time updates.
-Data entered about new trains stored in Firebase database.
-Moment.js calculates time and converts formats for display on schedule.
+
+User can fill out form with information about a train to add it to the schedule.
+
+App uses moment.js to convert time formats and run calculations relating to schedule. 
